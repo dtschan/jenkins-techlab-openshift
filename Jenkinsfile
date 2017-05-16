@@ -17,7 +17,7 @@ pipeline {
       ARTIFACTORY = credentials('jenkins-artifactory')
       ARTIFACT = "${env.JOB_NAME.split('/')[0]}-hello"
       REPO_URL = 'https://artifactory.puzzle.ch/artifactory/ext-release-local'
-      TECHLAB_LIBS = library(identifier: 'jenkins-techlab-libraries@master', retriever: modernSCM(
+      library(identifier: 'jenkins-techlab-libraries@master', retriever: modernSCM(
   [$class: 'GitSCMSource',
    remote: 'https://github.com/dtschan/jenkins-techlab-libraries']))
     }
