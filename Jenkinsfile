@@ -21,7 +21,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                milestone()  // The first milestone step starts tracking concurrent build order
+                milestone(1)  // The first milestone step starts tracking concurrent build order
                 library(identifier: 'jenkins-techlab-libraries@master', retriever: modernSCM(
   [$class: 'GitSCMSource',
    remote: 'https://github.com/dtschan/jenkins-techlab-libraries']))
@@ -37,7 +37,7 @@ pipeline {
                     configFileProvider([configFile(fileId: 'm2_settings', variable: 'M2_SETTINGS')]) {  // Config File Provider Plugin
                         sh 'mvn -B -V -U -e verify -Dsurefire.useFile=false'
                     }
-                    milestone()  // Abort all older builds that didn't get here
+                    milestone(11)  // Abort all older builds that didn't get here
                 }
             }
             post {
@@ -50,7 +50,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 input "Deploy?"
-                milestone()  // Abort all older builds that didn't get here
+                milestone(21)  // Abort all older builds that didn't get here
                 configFileProvider([configFile(fileId: 'm2_settings', variable: 'M2_SETTINGS')]) {  // Config File Provider Plugin
                     sh "mvn -s '${M2_SETTINGS}' -B deploy:deploy-file -DrepositoryId='puzzle-releases' -Durl='${REPO_URL}' -DgroupId='com.puzzleitc.jenkins-techlab' -DartifactId='${ARTIFACT}' -Dversion='1.0' -Dpackaging='jar' -Dfile=`echo target/*.jar`"
                 }
