@@ -17,14 +17,14 @@ pipeline {
       ARTIFACTORY = credentials('jenkins-artifactory')
       ARTIFACT = "${env.JOB_NAME.split('/')[0]}-hello"
       REPO_URL = 'https://artifactory.puzzle.ch/artifactory/ext-release-local'
+      TECHLAB_LIBS = library(identifier: 'jenkins-techlab-libraries@master', retriever: modernSCM(
+  [$class: 'GitSCMSource',
+   remote: 'https://github.com/dtschan/jenkins-techlab-libraries']))
     }
     stages {
         stage('Build') {
             steps {
-                milestone(1)  // The first milestone step starts tracking concurrent build order
-                library(identifier: 'jenkins-techlab-libraries@master', retriever: modernSCM(
-  [$class: 'GitSCMSource',
-   remote: 'https://github.com/dtschan/jenkins-techlab-libraries']))
+                milestone(1)  // The first milestone step starts tracking concurrent build order                
                 deleteDir()
                 git url: "https://github.com/LableOrg/java-maven-junit-helloworld"
                 sh 'mvn -B -V -U -e clean verify -DskipTests'
