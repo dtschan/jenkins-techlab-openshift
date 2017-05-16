@@ -1,5 +1,5 @@
 pipeline {
-    agent { label 'dtschan' }
+    agent { label env.JOB_NAME.split('-')[0] }
     options {
         buildDiscarder(logRotator(numToKeepStr: '5'))
         timeout(time: 10, unit: 'MINUTES')
