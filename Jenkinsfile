@@ -1,5 +1,3 @@
-@Library('jenkins-techlab-libraries') _
-
 pipeline {
     agent { label env.JOB_NAME.split('/')[0] }
     options {
@@ -22,8 +20,11 @@ pipeline {
     }
     stages {
         stage('Build') {
-            steps {                 
+            steps {
                 milestone()  // The first milestone step starts tracking concurrent build order
+                library identifier: 'jenkins-techlab-libraries@master', retriever: modernSCM(
+  [$class: 'GitSCMSource',
+   remote: 'https://github.com/dtschan/jenkins-techlab-libraries'])
                 deleteDir()
                 git url: "https://github.com/LableOrg/java-maven-junit-helloworld"
                 sh 'mvn -B -V -U -e clean verify -DskipTests'
